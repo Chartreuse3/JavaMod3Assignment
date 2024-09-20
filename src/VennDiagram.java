@@ -1,7 +1,7 @@
 import java.util.HashSet;
 import java.util.Set;
 
-public class VennDiagram<T> {
+public class VennDiagram<T extends Comparable<T>> {
     private String label1, label2, label3;
     private Set<T> circle1;
     private Set<T> circle2;
@@ -24,7 +24,7 @@ public class VennDiagram<T> {
         } else if (label.equals(label3)) {
             return circle3;
         } else {
-            throw new IllegalArgumentException("Unknown label");
+            throw new IllegalArgumentException("Unknown label: " + label);
         }
     }
 
