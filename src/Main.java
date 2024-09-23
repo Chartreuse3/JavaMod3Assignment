@@ -1,15 +1,17 @@
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
 
 public class Main {
 
     public static void main(String[] args) {
+        // Food example
         String carby = "carby";
         String tomatoey = "tomatoey";
         String cheesy = "cheesy";
 
         VennDiagram<String> foodDiagram = new VennDiagram<>(carby, tomatoey, cheesy);
-
+        // Add food items (hardcoded)
         foodDiagram.add("Croissant", carby);
         foodDiagram.add("Roll", carby);
         foodDiagram.add("Toast", carby);
@@ -33,48 +35,82 @@ public class Main {
         foodDiagram.add("Cheese Cubes", cheesy);
         foodDiagram.add("Fresh Mozzarella", cheesy);
 
-        System.out.println(foodDiagram.unionOf(carby, tomatoey));
-        System.out.println(foodDiagram.intersectionOf(tomatoey, cheesy));
-        System.out.println(foodDiagram.complementOf(cheesy, carby));
-        System.out.println(foodDiagram.diagramCenter());
+        // Output for food items
+        System.out.println("Food Diagram Results:");
+        System.out.println("Union of 'carby' and 'tomatoey': " + foodDiagram.unionOf(carby, tomatoey));
+        System.out.println("Intersection of 'tomatoey' and 'cheesy': " + foodDiagram.intersectionOf(tomatoey, cheesy));
+        System.out.println("Complement of 'cheesy' from 'carby': " + foodDiagram.complementOf(cheesy, carby));
+        System.out.println("Center of the Food Diagram: " + foodDiagram.diagramCenter());
 
+        // Integer example with hardcoded values for evens, primes, and Fibonacci
         VennDiagram<Integer> numberDiagram = new VennDiagram<>("evens", "primes", "fibonacci");
 
-        Set<Integer> evens = new HashSet<>();
-        for (int i = 1; i <= 10; i++) {
-            if (i % 2 == 0) {
-                evens.add(i);
-            }
+        // Hardcoded values
+        int[] predefinedNumbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        int[] evens = {2, 4, 6, 8, 10};
+        int[] primes = {2, 3, 5, 7};
+        int[] fibonacci = {1, 1, 2, 3, 5, 8};
+
+        // Add hardcoded values to the Venn diagram
+        for (int num : evens) numberDiagram.add(num, "evens");
+        for (int num : primes) numberDiagram.add(num, "primes");
+        for (int num : fibonacci) numberDiagram.add(num, "fibonacci");
+
+        // Display results for predefined numbers
+        System.out.println("\nPredefined Numbers Results:");
+        System.out.println("Sorted Union of 'evens' and 'primes': " + numberDiagram.unionOf("evens", "primes"));
+        System.out.println("Sorted Intersection of 'primes' and 'fibonacci': " + numberDiagram.intersectionOf("primes", "fibonacci"));
+
+        // User input
+        Scanner scanner = new Scanner(System.in);
+        VennDiagram<Integer> userNumberDiagram = new VennDiagram<>("evens", "primes", "fibonacci");
+
+        System.out.println("\nEnter numbers separated by space: ");
+        String[] numbersInput = scanner.nextLine().split(" ");
+
+        for (String numStr : numbersInput) {
+            int num = Integer.parseInt(numStr);
+            if (isEven(num)) userNumberDiagram.add(num, "evens");
+            if (isPrime(num)) userNumberDiagram.add(num, "primes");
+            if (isFibonacci(num)) userNumberDiagram.add(num, "fibonacci");
         }
 
-        Set<Integer> primes = new HashSet<>();
-        primes.add(2);
-        primes.add(3);
-        primes.add(5);
-        primes.add(7);
+        // Display results for user input
+        System.out.println("\nUser Input Results:");
+        System.out.println("Sorted Union of 'evens' and 'primes': " + userNumberDiagram.unionOf("evens", "primes"));
+        System.out.println("Sorted Intersection of 'primes' and 'fibonacci': " + userNumberDiagram.intersectionOf("primes", "fibonacci"));
 
-        Set<Integer> fibonacci = new HashSet<>();
-        fibonacci.add(1);
-        fibonacci.add(2);
-        fibonacci.add(3);
-        fibonacci.add(5);
-        fibonacci.add(8);
+        Set<Integer> oddFibonacciNumbers = new HashSet<>(userNumberDiagram.getSet("fibonacci"));
+        oddFibonacciNumbers.removeAll(userNumberDiagram.getSet("evens"));
+        System.out.println("User Input Odd Fibonacci Numbers: " + oddFibonacciNumbers);
 
-        for (Integer number : evens) numberDiagram.add(number, "evens");
-        for (Integer number : primes) numberDiagram.add(number, "primes");
-        for (Integer number : fibonacci) numberDiagram.add(number, "fibonacci");
+        Set<Integer> evenPrimeAndFibonacci = new HashSet<>(userNumberDiagram.getSet("evens"));
+        evenPrimeAndFibonacci.retainAll(userNumberDiagram.getSet("primes"));
+        evenPrimeAndFibonacci.retainAll(userNumberDiagram.getSet("fibonacci"));
+        System.out.println("User Input Numbers in 'evens', 'primes', and 'fibonacci': " + evenPrimeAndFibonacci);
+    }
 
-        System.out.println(numberDiagram.unionOf("evens", "primes"));
+    // Helper methods
+    private static boolean isEven(int num) {
+        return num % 2 == 0;
+    }
 
-        System.out.println(numberDiagram.intersectionOf("primes", "fibonacci"));
+    private static boolean isPrime(int num) {
+        if (num < 2) return false;
+        for (int i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i == 0) return false;
+        }
+        return true;
+    }
 
-        Set<Integer> oddFibonacciNumbers = new HashSet<>(numberDiagram.getSet("fibonacci"));
-        oddFibonacciNumbers.removeAll(numberDiagram.getSet("evens"));
-        System.out.println(oddFibonacciNumbers);
+    private static boolean isFibonacci(int num) {
+        int x1 = 5 * num * num + 4;
+        int x2 = 5 * num * num - 4;
+        return isPerfectSquare(x1) || isPerfectSquare(x2);
+    }
 
-        Set<Integer> evenPrimeAndFibonacci = new HashSet<>(numberDiagram.getSet("evens"));
-        evenPrimeAndFibonacci.retainAll(numberDiagram.getSet("primes"));
-        evenPrimeAndFibonacci.retainAll(numberDiagram.getSet("fibonacci"));
-        System.out.println(evenPrimeAndFibonacci);
+    private static boolean isPerfectSquare(int x) {
+        int s = (int) Math.sqrt(x);
+        return s * s == x;
     }
 }
