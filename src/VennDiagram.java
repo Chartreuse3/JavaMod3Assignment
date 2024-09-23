@@ -1,5 +1,6 @@
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class VennDiagram<T extends Comparable<T>> {
     private String label1, label2, label3;
@@ -34,29 +35,30 @@ public class VennDiagram<T extends Comparable<T>> {
         }
     }
 
-    public Set<T> unionOf(String first, String second) {
+    // Methods to return sorted versions of sets
+    public Set<T> sortedUnionOf(String first, String second) {
         Set<T> result = new HashSet<>(getCircleForLabel(first));
         result.addAll(getCircleForLabel(second));
-        return result;
+        return new TreeSet<>(result);
     }
 
-    public Set<T> intersectionOf(String first, String second) {
+    public Set<T> sortedIntersectionOf(String first, String second) {
         Set<T> result = new HashSet<>(getCircleForLabel(first));
         result.retainAll(getCircleForLabel(second));
-        return result;
+        return new TreeSet<>(result);
     }
 
-    public Set<T> complementOf(String first, String second) {
+    public Set<T> sortedComplementOf(String first, String second) {
         Set<T> result = new HashSet<>(getCircleForLabel(first));
         result.removeAll(getCircleForLabel(second));
-        return result;
+        return new TreeSet<>(result);
     }
 
-    public Set<T> diagramCenter() {
+    public Set<T> sortedDiagramCenter() {
         Set<T> result = new HashSet<>(circle1);
         result.retainAll(circle2);
         result.retainAll(circle3);
-        return result;
+        return new TreeSet<>(result);
     }
 
     public Set<T> getSet(String label) {

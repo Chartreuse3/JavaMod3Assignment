@@ -1,11 +1,9 @@
 import java.util.HashSet;
-import java.util.Scanner;
 import java.util.Set;
 
 public class Main {
 
     public static void main(String[] args) {
-
         String carby = "carby";
         String tomatoey = "tomatoey";
         String cheesy = "cheesy";
@@ -35,81 +33,48 @@ public class Main {
         foodDiagram.add("Cheese Cubes", cheesy);
         foodDiagram.add("Fresh Mozzarella", cheesy);
 
-        System.out.println("Food Diagram Results:");
-        System.out.println("Union of 'carby' and 'tomatoey': " + foodDiagram.unionOf(carby, tomatoey));
-        System.out.println("Intersection of 'tomatoey' and 'cheesy': " + foodDiagram.intersectionOf(tomatoey, cheesy));
-        System.out.println("Complement of 'cheesy' from 'carby': " + foodDiagram.complementOf(cheesy, carby));
-        System.out.println("Center of the Food Diagram: " + foodDiagram.diagramCenter());
+        System.out.println(foodDiagram.unionOf(carby, tomatoey));
+        System.out.println(foodDiagram.intersectionOf(tomatoey, cheesy));
+        System.out.println(foodDiagram.complementOf(cheesy, carby));
+        System.out.println(foodDiagram.diagramCenter());
 
         VennDiagram<Integer> numberDiagram = new VennDiagram<>("evens", "primes", "fibonacci");
 
+        Set<Integer> evens = new HashSet<>();
         for (int i = 1; i <= 10; i++) {
-            if (isEven(i)) numberDiagram.add(i, "evens");
-            if (isPrime(i)) numberDiagram.add(i, "primes");
-            if (isFibonacci(i)) numberDiagram.add(i, "fibonacci");
-        }
-
-        System.out.println("\nPredefined Numbers Results:");
-        System.out.println("Sorted Union of 'evens' and 'primes': " + numberDiagram.unionOf("evens", "primes"));
-        System.out.println("Sorted Intersection of 'primes' and 'fibonacci': " + numberDiagram.intersectionOf("primes", "fibonacci"));
-
-        Scanner scanner = new Scanner(System.in);
-        VennDiagram<Integer> userNumberDiagram = new VennDiagram<>("evens", "primes", "fibonacci");
-
-        System.out.println("\nEnter numbers separated by space: ");
-        String[] numbersInput = scanner.nextLine().split(" ");
-
-        for (String numStr : numbersInput) {
-            int num = Integer.parseInt(numStr);
-            if (isEven(num)) {
-                userNumberDiagram.add(num, "evens");
-            }
-            if (isPrime(num)) {
-                userNumberDiagram.add(num, "primes");
-            }
-            if (isFibonacci(num)) {
-                userNumberDiagram.add(num, "fibonacci");
+            if (i % 2 == 0) {
+                evens.add(i);
             }
         }
 
-        System.out.println("\nUser Input Results:");
-        System.out.println("Sorted Union of 'evens' and 'primes': " + userNumberDiagram.unionOf("evens", "primes"));
-        System.out.println("Sorted Intersection of 'primes' and 'fibonacci': " + userNumberDiagram.intersectionOf("primes", "fibonacci"));
+        Set<Integer> primes = new HashSet<>();
+        primes.add(2);
+        primes.add(3);
+        primes.add(5);
+        primes.add(7);
 
-        Set<Integer> oddFibonacciNumbers = new HashSet<>(userNumberDiagram.getSet("fibonacci"));
-        oddFibonacciNumbers.removeAll(userNumberDiagram.getSet("evens"));
-        System.out.println("User Input Odd Fibonacci Numbers: " + oddFibonacciNumbers);
+        Set<Integer> fibonacci = new HashSet<>();
+        fibonacci.add(1);
+        fibonacci.add(2);
+        fibonacci.add(3);
+        fibonacci.add(5);
+        fibonacci.add(8);
 
-        Set<Integer> evenPrimeAndFibonacci = new HashSet<>(userNumberDiagram.getSet("evens"));
-        evenPrimeAndFibonacci.retainAll(userNumberDiagram.getSet("primes"));
-        evenPrimeAndFibonacci.retainAll(userNumberDiagram.getSet("fibonacci"));
-        System.out.println("User Input Numbers in 'evens', 'primes', and 'fibonacci': " + evenPrimeAndFibonacci);
-    }
+        for (Integer number : evens) numberDiagram.add(number, "evens");
+        for (Integer number : primes) numberDiagram.add(number, "primes");
+        for (Integer number : fibonacci) numberDiagram.add(number, "fibonacci");
 
-    private static boolean isEven(int num) {
-        return num % 2 == 0;
-    }
+        System.out.println(numberDiagram.unionOf("evens", "primes"));
 
-    private static boolean isPrime(int num) {
-        if (num < 2) return false;
-        for (int i = 2; i <= Math.sqrt(num); i++) {
-            if (num % i == 0) return false;
-        }
-        return true;
-    }
+        System.out.println(numberDiagram.intersectionOf("primes", "fibonacci"));
 
-    private static boolean isFibonacci(int num) {
-        int x1 = 5 * num * num + 4;
-        int x2 = 5 * num * num - 4;
-        return isPerfectSquare(x1) || isPerfectSquare(x2);
-    }
+        Set<Integer> oddFibonacciNumbers = new HashSet<>(numberDiagram.getSet("fibonacci"));
+        oddFibonacciNumbers.removeAll(numberDiagram.getSet("evens"));
+        System.out.println(oddFibonacciNumbers);
 
-    private static boolean isPerfectSquare(int x) {
-        int s = (int) Math.sqrt(x);
-        return s * s == x;
+        Set<Integer> evenPrimeAndFibonacci = new HashSet<>(numberDiagram.getSet("evens"));
+        evenPrimeAndFibonacci.retainAll(numberDiagram.getSet("primes"));
+        evenPrimeAndFibonacci.retainAll(numberDiagram.getSet("fibonacci"));
+        System.out.println(evenPrimeAndFibonacci);
     }
 }
-
-//So my original idea for phase 2 was to allow the user to input numbers, and it would sort them as well.
-// I removed the original code for this to work more concisely. In phase 3 I redid it to put the original functionality
-// in with the new functionality.
